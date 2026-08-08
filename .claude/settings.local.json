@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Write-Output \"=== Proceso Docker Desktop ===\"; $p = Get-Process 'Docker Desktop' -ErrorAction SilentlyContinue; if \\($p\\) { Write-Output \"corriendo \\(PID $\\($p.Id\\)\\)\" } else { Write-Output \"NO esta corriendo\" }; Write-Output \"=== Servicio com.docker.service ===\"; $s = Get-Service 'com.docker.service' -ErrorAction SilentlyContinue; if \\($s\\) { Write-Output \"$\\($s.Status\\) / inicio: $\\($s.StartType\\)\" } else { Write-Output \"servicio no encontrado\" }; Write-Output \"=== WSL ===\"; wsl --status; Write-Output \"=== Distros WSL ===\"; wsl --list --verbose)",
+      "PowerShell(foreach \\($c in @\\('make','docker-compose'\\)\\) { $g = Get-Command $c -ErrorAction SilentlyContinue; if \\($g\\) { Write-Output \"$c = $\\($g.Source\\)\" } else { Write-Output \"$c = NO ENCONTRADO\" } }; Write-Output \"=== docker compose v2 \\(plugin\\) ===\"; docker compose version 2>$null; if \\(-not $?\\) { Write-Output \"no disponible sin daemon o no instalado\" })"
+    ]
+  }
+}

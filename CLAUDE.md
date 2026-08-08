@@ -1,155 +1,144 @@
-# Platziflix - Proyecto Multi-plataforma
+# Platziflix
 
-## Arquitectura del Sistema
+Plataforma de cursos online. **Monorepo poliglota con 4 artefactos desplegables por separado**, sin código compartido entre ellos:
 
-Platziflix es una plataforma de cursos online con arquitectura multi-plataforma que incluye:
-- **Backend**: API REST con FastAPI + PostgreSQL
-- **Frontend**: Aplicación web con Next.js 15
-- **Mobile**: Apps nativas Android (Kotlin) + iOS (Swift)
+| Artefacto | Stack | Puerto / Base URL |
+|---|---|---|
+| `Backend/` | FastAPI + PostgreSQL 15 | `:8000` — **única fuente de verdad de datos** |
+| `Frontend/` | Next.js 15 App Router | `:3000` → `http://localhost:8000` |
+| `Mobile/PlatziFlixAndroid/` | Kotlin + Jetpack Compose | → `http://10.0.2.2:8000` (emulador) |
+| `Mobile/PlatziFlixiOS/` | Swift + SwiftUI | → `http://localhost:8000` |
 
-## Stack Tecnológico
+La API REST es la **única** integración: no hay BFF, ni SDK generado, ni caché compartida. Los tres clientes son consumidores puros y stateless.
 
-### Backend (FastAPI/Python)
-- **Framework**: FastAPI
-- **Base de datos**: PostgreSQL 15
-- **ORM**: SQLAlchemy 2.0
-- **Migraciones**: Alembic
-- **Container**: Docker + Docker Compose
-- **Gestión dependencias**: UV
-- **Puerto**: 8000
+---
 
-### Frontend (Next.js)
-- **Framework**: Next.js 15 (App Router)
-- **React**: 19.0
-- **Lenguaje**: TypeScript
-- **Estilos**: SCSS + CSS Modules
-- **Testing**: Vitest + React Testing Library
-- **Fonts**: Geist Sans & Geist Mono
+## Regla de oro: el contrato está replicado a mano en 4 lugares
 
-### Mobile
-- **Android**: Kotlin + Jetpack Compose + Retrofit
-- **iOS**: Swift + SwiftUI + Repository Pattern
+No existe generación de código desde OpenAPI. **Cualquier cambio en la forma de un payload obliga a tocar los cuatro archivos**, o los clientes se rompen en silencio:
 
-## Estructura del Proyecto
+1. `Backend/app/schemas/` + los dicts que arma `Backend/app/services/course_service.py`
+2. `Frontend/src/types/index.ts` y `Frontend/src/types/rating.ts`
+3. `Mobile/PlatziFlixAndroid/.../data/entities/CourseDTO.kt`
+4. `Mobile/PlatziFlixiOS/PlatziFlixiOS/Data/Entities/CourseDTO.swift`
 
-```
-claude-code/
-├── Backend/           # API FastAPI + PostgreSQL
-├── Frontend/          # Next.js 15 App
-└── Mobile/
-    ├── PlatziFlixAndroid/  # Kotlin App
-    └── PlatziFlixiOS/      # Swift App
-```
+`Backend/specs/00_contracts.md` es el contrato *original del diseño* y **ya no describe el sistema real** — no lo trates como fuente de verdad. Si lo consultas, verifica contra `main.py`.
 
-## Modelo de Datos
+---
 
-### Entidades Principales
-- **Course**: Cursos (name, description, thumbnail, slug)
-- **Teacher**: Profesores
-- **Lesson**: Lecciones de un curso
-- **Class**: Clases individuales de una lección
+## Trampas del dominio (leer antes de tocar modelos o endpoints)
 
-### Relaciones
-- Course ↔ Teacher (Many-to-Many via course_teachers)
-- Course → Lesson (One-to-Many)
-- Lesson → Class (One-to-Many)
+### `Lesson` en la DB es `class` en la API
 
-## API Endpoints
+Hay **dos vocabularios para la misma entidad** y la traducción es implícita:
 
-- `GET /` - Bienvenida
-- `GET /health` - Health check + DB connectivity
-- `GET /courses` - Lista todos los cursos
-- `GET /courses/{slug}` - Detalle de curso por slug
+- DB / ORM: tabla `lessons`, modelo `Lesson`
+- API y los 3 clientes: la llaman `class` / `classes`
+- En `GET /classes/{class_id}` además se renombra `name` → `title`
 
-## Comandos de Desarrollo
+No "corrijas" uno de los dos lados sin migrar los cuatro artefactos a la vez.
 
-### Backend
+### `Backend/app/models/class_.py` es código muerto y roto
+
+Define un modelo `Class` que **no debe importarse**: no está en `models/__init__.py`, declara `back_populates="classes"` contra una relación que `Course` no tiene, y apunta a una tabla `classes` que ninguna migración crea. Importarlo rompe el mapeo de SQLAlchemy al arrancar. Es candidato a borrarse.
+
+### Soft delete es una invariante global
+
+`BaseModel` (`Backend/app/models/base.py`) da `id`, `created_at`, `updated_at` y `deleted_at` a **todas** las entidades. Consecuencias obligatorias:
+
+- **Nunca** hacer `DELETE` físico. Borrar = `deleted_at = datetime.utcnow()`.
+- **Toda** query de lectura debe filtrar `.filter(X.deleted_at.is_(None))`. Omitirlo devuelve registros borrados.
+
+---
+
+## Comandos
+
+### Backend — Docker es obligatorio
+
+La API y la DB solo corren en Docker Compose. **Nunca ejecutes `alembic`, `pytest`, `python` o `uv` en el host**: la app espera el host `db` y `DATABASE_URL` del compose. Todo pasa por los targets del `Makefile`, que hacen `docker-compose exec api`.
+
+Antes de ejecutar cualquier comando de backend: verifica que el contenedor `api` esté arriba y usa el target del `Makefile` (`make help` los lista). No inventes comandos nuevos — si falta uno, agrégalo al `Makefile`.
+
 ```bash
 cd Backend
-make start        # Iniciar Docker Compose
-make stop         # Detener containers
-make migrate      # Ejecutar migraciones
-make seed         # Poblar datos de prueba
-make logs         # Ver logs
+make start              # levantar db + api
+make migrate            # aplicar migraciones (dentro del contenedor)
+make create-migration   # crear migración (pide el mensaje interactivamente)
+make seed-fresh         # limpiar y repoblar datos de prueba
+make logs
 ```
 
-### Frontend
-```bash
-cd Frontend
-yarn dev          # Servidor de desarrollo
-yarn build        # Build de producción
-yarn test         # Ejecutar tests
-yarn lint         # Linter
+### Frontend — yarn, no npm
+
+Hay `yarn.lock` y `.npmrc`. Usar `yarn` siempre.
+
+---
+
+## Convenciones propias (difieren de los defaults)
+
+**Backend**
+- Las rutas de `main.py` **no tocan el ORM**: delegan en `CourseService` vía `Depends(get_course_service)`. Excepción conocida a corregir: `GET /classes/{class_id}` consulta `Lesson` directamente desde la ruta.
+- `CourseService` ya es un god-object de ~400 líneas (cursos + todo el subsistema de ratings). Nueva lógica de ratings debería ir a un `RatingService` separado, no engordarlo más.
+- Dependencias con `uv`, no pip.
+
+**Frontend**
+- Las llamadas nuevas a la API van en `src/services/*.ts` siguiendo el patrón de `ratingsApi.ts` (timeout con `AbortController`, `ApiError` tipado, `NEXT_PUBLIC_API_URL`). **No** agregar más `fetch` inline en Server Components — las páginas existentes lo hacen y es el patrón que estamos dejando atrás.
+- Estilos: SCSS + CSS Modules (`Componente.module.scss` junto al componente). No hay Tailwind ni CSS-in-JS.
+- TypeScript strict.
+
+**Mobile — ambas apps usan la misma Clean Architecture de 3 capas**
 ```
-
-## URLs del Sistema
-
-- **Backend API**: http://localhost:8000
-- **Frontend Web**: http://localhost:3000
-- **API Docs**: http://localhost:8000/docs (FastAPI Swagger)
-
-## Base de Datos
-
-### Configuración Docker
-- **Usuario**: platziflix_user
-- **Password**: platziflix_password
-- **Database**: platziflix_db
-- **Puerto**: 5432
-
-### Migraciones
-- Ubicación: `Backend/app/alembic/versions/`
-- Comando crear: `make create-migration`
-- Comando aplicar: `make migrate`
-
-## Funcionalidades Implementadas
-
-- ✅ Catálogo de cursos con grid estilo Netflix
-- ✅ Detalle de cursos (profesores, lecciones, clases)
-- ✅ Navegación por slug SEO-friendly
-- ✅ Reproductor de video integrado
-- ✅ Health checks de API y DB
-- ✅ Apps móviles nativas (Android + iOS)
-- ✅ Testing en todos los componentes
-
-## Patrones de Desarrollo
-
-### Backend
-- **Arquitectura**: Service Layer Pattern
-- **Dependency Injection**: FastAPI Dependencies
-- **Database**: Repository Pattern con SQLAlchemy
-
-### Frontend
-- **Routing**: Next.js App Router
-- **Data Fetching**: Server Components + fetch
-- **Styling**: CSS Modules + SCSS
-- **Testing**: Component testing con Vitest
-
-### Mobile
-- **Android**: MVVM + Jetpack Compose
-- **iOS**: SwiftUI + Repository + Mapper Pattern
-
-## Consideraciones de Desarrollo
-
-1. **Docker obligatorio** para el backend (DB + API)
-2. **TypeScript strict** en Frontend
-3. **Testing requerido** para nuevas funcionalidades
-4. **Migraciones automáticas** para cambios de DB
-5. **Convenciones de naming**: snake_case (Python), camelCase (JS/TS), PascalCase (Swift/Kotlin)
-6. **API REST** como única fuente de datos para Frontend/Mobile
-
-## Comandos Útiles
-
-```bash
-# Desarrollo completo
-cd Backend && make start    # Iniciar backend
-cd Frontend && yarn dev     # Iniciar frontend
-
-# Reset completo de datos
-cd Backend && make seed-fresh
-
-# Ver logs de todos los servicios
-cd Backend && make logs
+Presentation (ViewModel + UiState + Views)
+     ↓ depende de
+Domain (modelos puros + interfaz/protocolo de repositorio)
+     ↑ implementa
+Data (DTO + Mapper + RemoteRepository + red)
 ```
+- `Domain` **nunca** importa de `Data` ni de `Presentation`. Los DTO no cruzan a `Presentation`: siempre pasan por un Mapper.
+- Android: MVI (`handleEvent(UiEvent)` + `StateFlow`), DI manual en `di/AppModule.kt`. El flag `USE_MOCK_DATA` permite correr sin backend.
+- iOS: MVVM, DI por parámetro default (`= NetworkManager.shared`).
 
-Esta memoria contiene toda la información necesaria para continuar el desarrollo del proyecto Platziflix.
-- Cualquier comando que necesites ejecutar para el Backend debe ser dentro del contenedor de docker API, antes de ejecutarlo certifica que esté funcionando el contenedor y revisa el archivo makefile con los comandos que existen y úsalos
+**Naming por lenguaje**: `snake_case` (Python, JSON de la API), `camelCase` (TS/Kotlin/Swift), `PascalCase` (tipos).
+
+**Testing requerido** para funcionalidad nueva: `Backend/app/tests/` (pytest dentro del contenedor), Vitest + React Testing Library en Frontend, JUnit / XCTest en móvil.
+
+---
+
+## Deuda conocida — no re-descubrir, ya está diagnosticada
+
+Estado a 2026-08-08. Si vas a trabajar en una de estas áreas, arregla el punto en el camino; si no, déjalo.
+
+**Bloqueantes para producción**
+- **No hay CORS** configurado en `Backend/app/main.py`. `ratingsApi.ts` corre en el navegador → toda escritura de rating desde el cliente será bloqueada.
+- **No hay autenticación en ninguna capa.** `user_id` llega como entero arbitrario en body/path, sin tabla `users` ni FK. Cualquiera puede calificar como cualquiera.
+- **URLs de desarrollo hardcodeadas en los 4 artefactos.** Solo `ratingsApi.ts` usa variable de entorno.
+
+**Desalineaciones cliente ↔ servidor**
+- `ratingsApi.getUserRating` llama `GET /courses/{id}/ratings/{userId}`; esa ruta solo acepta `PUT`/`DELETE`. El GET real es `/courses/{id}/ratings/user/{user_id}`.
+- El backend señala "sin rating" con `HTTPException(204)` — un 204 no puede llevar body, y el cliente espera 404. `handleApiResponse` lo rechaza por falta de `content-type` en vez de devolver `null`.
+- `generateMetadata` en `Frontend/src/app/course/[slug]/page.tsx` usa `courseData.title`; la API entrega `name` → título `undefined`.
+
+**Rendimiento**
+- `get_all_courses` llama `get_course_rating_stats` por curso, y cada llamada hace 3 queries → **1 + 3N consultas** en el listado principal. Se resuelve con un solo `GROUP BY course_id`.
+
+---
+
+## Paridad de features por plataforma
+
+| Feature | Backend | Frontend | Android | iOS |
+|---|---|---|---|---|
+| Listado de cursos | ✅ | ✅ | ✅ | ✅ |
+| Detalle por slug | ✅ | ✅ | ❌ | ✅ |
+| Reproductor de video | ✅ | ✅ | ❌ | ❌ |
+| Ratings (CRUD + stats) | ✅ | ✅ | ❌ | ❌ |
+| Progreso / Quiz / Favoritos | ❌ | tipos declarados sin uso | ❌ | ❌ |
+
+Al agregar una feature, decide y declara explícitamente si es solo-web o multiplataforma. Si es multiplataforma, los DTO de Android e iOS necesitan los campos nuevos.
+
+---
+
+## Reglas de trabajo
+
+1. No hagas commit ni push sin que se te pida.
+2. Cambios de schema → migración Alembic vía `make create-migration`. Nunca editar una migración ya aplicada.
+3. Si un cambio toca el contrato REST, enumera explícitamente qué artefactos de los 4 quedan desincronizados.

@@ -1,0 +1,222 @@
+ Curso de Claude Code
+
+ Transforma tu forma de programar con Claude Code. 
+ Aprende a construir software conversando con la IA: analiza código, diseña features y ejecuta pruebas desde la terminal. 
+ Desarrolla proyectos completos en equipo con agentes inteligentes y flujos de trabajo reales
+ 
+ 1. Qué hace único a Claude Code
+ https://platzi.com/cursos/claude-code/que-hace-unico-a-claude-code/
+
+     a) Analiza el proyecto.
+     b) Conecta archivos.
+     c) Entiende el contexto.
+     d) Propone soluciones coherentes con la arquitectura existente.
+
+     No responde órdenes, conversa, no genera línea. Construtye contigo.
+
+     Se trata no de memorizar comandos, se trata de desarrollar conversando, con criterio, con intensión y con una inteligencia que entiende tu proyect de principio a fin. Foraremos parte de
+     Platzifliz, una plataforma de cursos online. La mision: implementar un sistema de calificación de 1 a 5 esrtrellas para los cursos. Un proyecto real con 
+
+     - Backen en FastAPI.
+     - Frontend en Nextjs.
+     - Base de datos con postre.
+
+     Construiremos conversando con Claude, que construye, ejecuta, valida y prueba cada cambio, optimiza y colabora integrando GiHub, testing, performance y Seguridad. El resultado un feature completo:
+
+     - Modelo de Base de datos.
+     - API.
+     - UI.
+     - Pruebas.
+     - Y validaciones
+     - Pero sobr todo una nueva forma de desarrllar.
+
+     Contrario a otros cursos, Uno de los objetivos primordiales de éste es que te enseña a pensar mejor antes de escribirlo. No aprendes prompts. Aprendes decisiones, y cada decisión, parte del análiis.
+     No de la improvisación, el futuro del desarrollo no pertenece a quienes escriben más código, sino, a quienes piensan mejor el código que escriben, pués Calude code no acelera el trabajo, lo eleva.
+
+
+ 2. Cómo entender un codebase nuevo con Claude Code
+ https://platzi.com/cursos/claude-code/como-entender-un-codebase-nuevo-con-clou/
+
+ Cada desarrollador, que llega a un proyecto nuevo repite el mismo ritual:
+
+ Clona el repositorio, Abre carpetas, Revisa archivos toma notas y aun asi, siente que es muy probable que no entienda nada. Esto no es falta de habilidad. Es falta de método. Por eso antes de empezar 
+ se debe tener en cuenta que este curso es técnico con los siguientes prerequisitos:
+
+ a) Terminal.
+ b) Git.
+ c) API Rest.
+ d) Bases de datos relacionales.
+ e) arquitectura cliente-servidor.
+
+ Trabajaremos con FastiApi, Nextjs, docker, Playwright.
+
+ Cada feature que construyamo, seguirá un flujo simple pero poderoso: Análisis, Planificación y Ejecución.
+
+ Antes de escribir entendemos, exploramos el code base, identificamos modelos y puntos de impacto. El trabajo en este curso no es escibir más, es pensar mejor. Calude code, genera gran parte del código,
+ equipos nuestra decisión definir el sentido de lo que él genera, si respeta la arquitectura y si es eficiente.
+ 
+ Cuando analisas el code base, apederas referencias y análisis multi archivos.
+ Cuado diseñes un feature, descubrirás Think Deeply y agentes especializados.
+ Cuando ejecutes código, conocerás comandos de validación prueba y seguridad.
+
+ Verás como lo que parecía complejo, se vuelve claro y controlable.
+
+ 3. Instala y configura Claude Code en minutos
+ https://platzi.com/cursos/claude-code/instala-y-configura-claude-code-en-minut/
+
+ Aprende a instalar Claude Code desde cero, configurarlo en tu terminal e integrarlo con un editor como Cursor para acelerar tu flujo de desarrollo. 
+ Esta guía está pensada para devs que quieren tener el modelo listo en minutos y entender los comandos básicos para diagnosticar y autenticar su instalación.
+
+ npm install -g @anthropic-ai/claude-code@latest
+
+ Una vez finalizada la instalación, desde la linea de comandos, escribir el comando claude
+ Esto abre la herramienta de comandos de antropico, llamada REPL.
+ un REPL es un entorno interactivo en la terminal que te permite escribir consultas, e interactuar con el modelo
+ recibir respuestas y mantener una conversación continua con la inteligencia artificial sin salir del programa
+ Significa Read-Eval-Print Loop 
+ (Bucle de lectura, evaluación e impresión). 
+
+ Funciona de la siguiente manera:
+
+ - Lee lo que escribes en la terminal.
+ - Evalúa o procesa tu petición junto con el contexto del proyecto.
+ - Imprime o muestra la respuesta de Claude en pantalla.
+ - Repite el ciclo para que puedas seguir chateando o darle nuevas órdenes hasta que decidas salir.
+
+ Muestra algunas instrucciones, respecto a lo que tienes posibilidad de esctibir:
+ /help -> for help
+ /status -> form your current setup
+ /doctor -> Diagnostica y revisa como está la instalación y la configuración de claude:
+
+    verificar el binario donde está instalado Claude
+    Ejecutar el comenado DOCTOR de REPL
+    Revisar el estado actual del setup cn staus
+
+ /login -> Para poder acceder y utilizar claude. Presenta dos opciones: 
+    1. Claude account with subscription - Pro, Max, Tam, or Enterprise
+    2. Antropic Console account - Api usage billing
+
+    Diferencias entre los dos: Al pagar la subscripción se tiene acceso a la aplicación de escritorio de Claude y también acceso a claude code
+    El plan pro es el más económico, con él se tiene acceso a algunos modelos, en este caso Sonnet, pero no al más avanzado que es Opus, y a una cantidad limitada de tokens, versus Max que si amlia
+    el rando a poder utilizar Opus y una mayor cantidad de tokens, pero esta es personal y la de abajo es como si compraramos tokens en la cosola de Antropic.
+
+    Si vas a usar Claude con los tokens de una empresa, debes elegir la opción 2.
+
+ Utilizar Cloude dentro de VSC
+ Se pude utlizar Clude desde la terminal, sin embargo, es posible instalar una extensión llamada Claude code, el cual ofrece unas mejores opciones de pasarle mejor contexto y tener una mejor experiencia
+
+
+ 4. Cinco conceptos clave para usar Claude Code
+ https://platzi.com/cursos/claude-code/cinco-conceptos-clave-para-usar-claude-c/
+
+ Fundamentos que hacen a Claude distinto de cualquier otra herramienta de IA. Cinco conceptos, determinan como piensa, como recuerda y como colbora contigo:
+
+ - La ventana de contexto
+
+     La ventana de contexto es la memoria de trabajo de Claude: todo lo que puede procesar y recordar al mismo tiempo, incluyendo tu código, la conversación activa y los resultados que va generando 
+     Claude code maneja 200.000 Tokens en la versión por defecto y tiene una versión de 1.000.000 de Tokens los cuales son suficientes para analizar proyectos medianos o incluso grandes . Cuandeo esa memoria
+     se llena, Claude empieza a olvidar información antigua, pero el mismo se encarga de gestionar ese espacio automáticamente, limpia datos irrelevantes y conserva solo lo que sigue siendo útil.
+     En la práctica esto sinifica que puedes referenciar archivos con el símbolo arroba (@), en lugar de copiar grandes bloques de código. Si notas que Claude olvida alguna decisión o contexto, simplemente.
+     abre una nueva sesión y vuelve a referenciar los archivos clave. Asi optimizas la memoria y mantienes la conversación enfocada.
+     No es necesario que seamos expertos en ninguno, pero entenderlos te permitirá usar Cloude code con intención, precisión y confianza. 
+
+ - Los subagentes
+
+     Los subagentes son versiones de Claude enfocadas en tareas específicas (como backen, forntEnd QA, arquitectura, etcétera) como si fueran miembros de tu equipo de desarrollo. Casa uno tiene su 
+     propio contexto, herramientas y conocimiento técnico, por ejemplo:
+     - El arquitecto analiza la estructura general del sistema.
+     - El backend implementa las APIS. 
+     - El forntEnd construye los componentes de interfaz 
+     - QA se encarga de validad la calidad final.
+
+     Puedes invocar a cada uno según la tarea que necesites resolver: Agente de backends para endPoints o agente de Frontend para componentes. 
+     Mientras trabajan, mantienen los contextos separados y no saturan la sesión principal. El resultado, es un flujo modular donde cada agente se enfoca en su especialidad, igual que en un 
+     equipo de desarrollo real.
+     
+ - El modo de context Protocol o MCP
+
+     El Model Context Protocol es el sistema que permite a Claude Code conectarse con herramientas externas más allá de tu código.
+     Gracias al MCP, Claude no solo lee archivos de código, sino, que también accede a bases de datos, ejecuta pruebas automatizadas, revisa issues en GitHub o interactúa con servicios como Figma o Zapier.
+     Esto significa que puedes pedirle a Claude que corra pruebas de Playwright directamente desde la conversación, que revise un "pull request" o que consulte datos de una API, sin salir de la terminal.
+     Todo eso ocurre en forma natural, porque MCP, integra esas herramientas como su fueran funciones nativas. Solo necesitas configurar cada conexión una vez y a partir de ahí, calquier miembro
+     del equipo puede usarlas conversacionalmente. Claude code se convierte entonces en el puente que conecta tu proyecto con todo tu ecosistema de herramintas.
+
+     
+ - La CLI
+
+     Es la interfaz donde todo ocurre. Claude code no tiene una interfaz fráfica, vive en la termnal, el hecho de vivir en la terminal es su ventaja, Usa comandos del sistea con el prefijo signo
+     de exclamación. Calude no te dice que deberías ejecutar, lo ejecuta, analiza los resultados y te ayuda a interpretarlos. Esto mantine tu flujo limpio: La termnal para Claude, el editor para escribir
+     código y el navegador para validar resultados. 
+
+     
+ - Context engineering
+
+     Claude no necesita prompts perfectos. Necesita que le construyas en contexto útil. Un entorno de nformación ddonde puedas razonar con precisión.
+     No se trata de escribir una gran instrucción, sino, de darle los datos adecuados. Una instrucción vaga genera ruido. Porejemplo: "Ayúdame con el código". No tiene suficiente información. 
+     En cambio, una instrucción con contexto, produce resultados precisos. 
+
+     El context engineering es usar referencias a archivos, en lugar de copia código. Explicar el propósito de la tarea. INdicar que patron seguir o evitar y mantener la conversación limpia de información innecesaria.
+     No estar haciendo "prompting", estas diseñando un espacio de pensamient ocompartido con la inteligencia artificial. Ese espacio, el contexto es lo que define la calidad del resultado.
+
+ Estos cinco conceptos, resumen la ventaja de Claude code. Claude code no necesita que aprendamos a escribir "prompts". Necesita que aprendas a escribir a creas el contexto donde las decisiones 
+ tienen sentido. El poder de Claude Code no está en escribir más líneas de código, sino, en pensar dentro del contexto correcto
+
+ 5. Analiza y configura un proyecto con Claude Code
+ https://platzi.com/cursos/claude-code/analiza-y-configura-un-proyecto-con-clau/
+
+ En esta clase, usaremos Claude, para analiar la arquitectura de una base de código ya existente y para configurar el entorno de desarrollo
+ Este, es un proyecto fullStack dado que tiene carpetas para backen, frontend y mobile. Inicialmente no concemos la arquitectura. 
+
+ A través de un prompt sencillo:
+ Analiza el proyecto y entiende cómo es la arquitectura que tiene, es importante que entiendas que hay más de un proyecto contenido en él @Backend/ @Frontend/ @Mobile utiliza a estas carpetas
+ para crear un big picture de la arquitectura del sistema 
+
+ Con este prompt, claude responde: Voy a explorar los tres subproyectos para armar el panorama completo.
+
+ Esto puede tomar un tiempo considerable porque necesita tomar todo el contexto completo del proyecto, enviarlo al LLM y luego el LLM, entiende cual es la base de código.
+ En muchos casos nos vamos a encontrar con que claude, necesita pernisos explicitos para poder ejecutar una acción. 
+
+ Es importante que el análisis del proyecto que ha hecho Calude, quede guardado dentro del proyecto, o más exactamente en el archivo CALUDE.md, que es el sistema de memoria de la documentación 
+ que tiene claude, para poder trabajarlo dentro de un proyecto. para ello, le damos la siguioene instrucción.
+ 
+ Gracias, excelente análisis, ahora con esta información que tienes en contexto, crea el archivo calude.md para que se pueda utilizar como memoria para el resto del desarrollo de este proyecto.
+
+ Es importante anotar que al Calude estar integrado dentro del mismo editor VSC, pide que acepte las recomendaciones, este comportamiento que está integrado dentro de los editores 
+
+ Poner a fucnionar el backend del servicio en mi entorno local de desarrollo. El prompt es el siguientte:
+ Ahora ayúdame a levantar el backend localmente. Primero voy a verificar que Docker esté funcionando y luego usar los comandos del Makefile.
+
+ Después de darel estas instrucciones, y a sabiendas 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

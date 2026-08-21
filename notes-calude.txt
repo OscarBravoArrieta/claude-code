@@ -188,6 +188,30 @@
 
  Después de darel estas instrucciones, y a sabiendas 
 
+ 6. Análisis de impacto del feature de ratings con Claude Code
+ https://platzi.com/cursos/claude-code/analisis-de-impacto-del-feature-de-ratin/
+
+ Nos apoyaremos en Clude code y los tres niveles de pensamiento extendido, para poder topmar el contexto necesario de que cambios hay que hacer dentro del proyecto para la implementaciónm de este feature 
+
+ El primer feature en el que nos vamos a apoyar para pensar en como vamos a hacer la implementación de los ratings, es el THING.
+ Recordemos Claude Code tiene un modelo que utiliza pensmiento extendido o razonamiento. Para activarlo tenemos tres palabras clave.
+
+ - think, que piensa de una forma no tan profunda, sino, mas bien superficial pero útil en ciertos casos.
+ - deeply, que es pensar más profundamente sonbre el problema
+ - ultrathink, 
+
+ Vemos que para cada una de las palabra, el color de la letra camnbia, Para este caso, vamos a usar
+ think deeply, puesto que no necesitamos que piense tan profundamente como ultrathink, ni tan básico como think
+
+ la instucción sería:
+ think deeply necesito implementar un sistema de ratings en este proyecto, el rating de un curso puede ir desde 1 estrella hasta 5 estrellas. Tu tarea es analizar el impacto que va a tener la implementación de este feature en el proyecto. Analiza que acciones deben hacerce en cada uno de los componentes del proyeco (backend y frontend) para implementar el rating.
+
+
+
+
+
+
+
 
 
 

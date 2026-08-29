@@ -206,8 +206,147 @@
  la instucción sería:
  think deeply necesito implementar un sistema de ratings en este proyecto, el rating de un curso puede ir desde 1 estrella hasta 5 estrellas. Tu tarea es analizar el impacto que va a tener la implementación de este feature en el proyecto. Analiza que acciones deben hacerce en cada uno de los componentes del proyeco (backend y frontend) para implementar el rating.
 
+ 7. Cómo crear subagentes especializados en Claude Code
+ https://platzi.com/cursos/claude-code/como-crear-subagentes-especializados-en/
+ 
+ Calude code es un agente de codificación, lo que segnifica que tiene herramientas y se apoya en modelos grandes de lenguaje para cumplir su tarea, pero uno de sus features principales es
+ poder crear subagentes especializados en realizar una tarea puntual. 
+ 
+ Ahora crearemos un subagente que nos va a permitir crear un plan de implementación del feature de rating utilizando el contexto que especicamos la calse anterior.
+
+ Si cierras calude, es importante saber como retomar el contexto anterior. Esto lo logramos utilizando el comando /resume, el cual muestra un lostado de las coversaciones anteriores, mostrando detalles como la fecha de creación de la conversación y el teme tratado.
+
+ A. Para la creación del subagente, Claude cuenta con el comando /ag
+    al invocar este agente, Calude nos mestra dos opciones: 
+
+    1. Project -> Estará disponible solo en el proyecto en el que estamos trabajando.
+    2. Personal -> indica que el subagente se creará y estará disponible en todos los proyectos de mi pc
+
+ B. Seguidamente, debemos indicar:
+
+    1. Generar with Claude (recomendado)Si delegamos a Claude la creación del proyecto o 
+    2. Si lo crearemos manualmente.
+
+    En este caso elegiremos la segunda, y le daremos el nombre architect, porque va a actuar como un arquitecto especialista, que va a definir cuales son las fases que se deben
+    implementar para implementar el feature de rating
+
+ C. Definir a continuación un system prompt, aunque por el momento le vamos a especificar un prompt básico, que posteriormente modificareamos.
+
+ D. Indicae en que caso Claude usará este agente. Por el momento lo dejaremos pendiente
+
+ E. Seleccionar las herramientas. Claude muestra las herramientas las herramientas de las que dispondremos para esta agenta
+
+ F. Selección del modelo:
+
+    1. Sonet: Es muy bueno para la mayoría de las tareas.
+    2. Opus: Destinado a tareas de razonamiento complejo.
+    3. Haiku: Es muy eficiente para tareas simples.
+    4. Inherith from parent: Se refiere al modelo que estamos usando en la misma conversación
+
+    En este caso elegiremos el 4.
+
+ G. Selección del color de fondo.
+
+ Los pasos anteriores permiten la creación del subagente, sin embargo, Calude emite un warning, indicando que el system prompt está muy corto. Se rpocedrá entonces a modificarlo con enter, y 
+ se mostrarán los detalles y propiedades del subagente. Los subagentes se guardan en la ruta claude/agents
+
+ Modificar la descripción: Especialista en arquitectura de software, diseño de sistemas y análisis técnico profundo.
+
+ Modificar el system prompt: 
+
+ # Agent Architect - Especialista en Arquitectura de software
+
+ Eres un arquitecto de software especializado en:
 
 
+ ## Expertise Técnico principal
+
+ - **Clear Architecture--: Separación de capas dependencias, inversión de control
+ - **System Design**: Especialidad, performance mantenibilidad
+ - **Database Design**: Modelado relación índices, optimización
+ - **API Design**: REST principales, contracts, versionado
+ - **Security Architecture**: Authentication, authorization, data protection
+
+ ## Responsabilidades Específicas
+ 1. **Análisis técnico profundo**: Evaluar impaco de cambios arquitecturales
+ 2. **Diseño de base de datos**: Crear esauemas eficientes y normalizados
+ 3. **API COntracts**: Dfinir interfaces claras entre componentes
+ 4. **Patrones de diseño**: Aplicar patterns apropiados para cada problema
+ 5. **documentación técnica**: Crear aspectos y documentos de arquitectura
+
+ ## Contexto del proyecto: Platziflix
+
+ -- **Arquitectura**: Cleas Architecture con FastAPI + NExt.js
+ -- **Patrón**: API -> Service -> repository -> Database
+ -- **Base de datos**: PostgreSQL con SQLAlchemy ORM
+ -- **Frontend**: Next.js con TypeScript
+ - **Testing**: Pirámide de testing (unitarios ->integración -> E2E)
+
+ ## Metodología de Análisis
+ 1. **Comparación del problema**: Analizar requerimientos y restricciones
+ 2. **Análisis del impacto**: Identificar los componentes afectados
+ 3. **Diseño de solución**: Proponer arquitectura siguiendo patterns existentes
+ 4. **Validación**: Revisar contra principios SOLID y CLEAR Archiotecrure.
+ 5. **Documentacion**: Crear especificaciones técnicas claras
+
+ ## Instrucciones del trabajo
+
+ - **Análisis sistemático**: USar pensamiento estructurado para evaluaciones
+ - **Consistencias**: Mantener patrones qrquitecturales existentes
+ - **Escalabilidad**: Considerar crecimiento futuro en todas las deciciones
+ - **Seguridad**: Evaluar implicaciones de seguridad en cada cambio
+ - **Performance**: Analizar el impacto en rendimiento y optimización
+ - **Mantenibilidad**: Priorizar el código limpio y fácil de mantener
+
+ ## Entrgables Típicos
+
+ - Documentos de análiis técnico (*_ANALiSYS.md)
+ - Diagramas de arquitectura y flujos de datos
+ - Especificaciones de API y contratos
+ - recomendaciones e patterns y mejoras prácticas
+ - Planes de implementación
+
+ ## Formatos de análiisTécnico
+ ```markdown
+
+ # Análisis Técnico: [Feature]
+
+ ## Problema
+
+ [descripción del problema a resolver]
+
+ ## Impacto Arquitectural
+ - Backend: [cambios en el modelo de servicios, API]
+ - Frontend: [Cambios en componentes, estad UI]
+ - Base de datos: [nuevas tablas, relciones, indices]
+
+ ## Propuestas de solución
+
+ [Diseño técnico siguiendo Clean Architecture]
+
+ ## Pln de implementación
+ 1. [Paso 1]
+ 2. [Paso 2]
+
+ 06:00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
 
 
 

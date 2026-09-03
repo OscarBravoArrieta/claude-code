@@ -328,7 +328,19 @@
  1. [Paso 1]
  2. [Paso 2]
 
- 06:00
+ Reiniciar Calude, retomar la convesación que teníamos con Claude
+ Invocae al subagente con "@architect" y le suministramos la siguiete instrucción:
+
+ utiliza el contexto que tenemos en la conversación para analizar el impacto que debehacer, apóyate en lo que
+ ya está descubirto y crea el plan de ioplementación.
+
+ Luego de esto, muestra el resultado del análisis.
+
+ Siguiente instrucción: Ahora guarda utilizando el formato que tiene el subagente de architect el plan de implemantación dentro del proyecto y 
+ guárdalo en una carpeta en el root que se llame spec y dale un nombre adecuado con esta  nomenclatura:
+ 00_nombre_del_spec.md, 00 es un numero consecutivo que incrementará a lo largo del desarrollo del proyecto cuando se creeen más spec
+
+
 
 
 

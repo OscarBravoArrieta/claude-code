@@ -339,9 +339,71 @@
  Siguiente instrucción: Ahora guarda utilizando el formato que tiene el subagente de architect el plan de implemantación dentro del proyecto y 
  guárdalo en una carpeta en el root que se llame spec y dale un nombre adecuado con esta  nomenclatura:
  00_nombre_del_spec.md, 00 es un numero consecutivo que incrementará a lo largo del desarrollo del proyecto cuando se creeen más spec
+ 
+  8. Novedades de Claude Code 2.0 y Sonnet 4.5
+  https://platzi.com/cursos/claude-code/novedades-de-claude-code-2-0-y-sonnet-4/
 
+Claude Code 2.0 llega con mejoras que cambian la forma de programar con IA: sistema de checkpoints, interfaz gráfica renovada, modos de pensamiento simplificados y soporte para Sonnet 4.5, un modelo capaz de ejecutar tareas durante 30 horas sin perder contexto. Si ya trabajas con Claude Code, esta actualización vale la pena.
 
+¿Cómo actualizar Claude Code a la versión 2.0?
 
+La actualización toca dos frentes: el CLI y el plugin de Visual Studio Code. Conviene revisar ambos para tener la misma versión corriendo en paralelo.
+
+Para actualizar el CLI, escribes el comando claude update en la terminal. El sistema revisa la versión instalada, la compara con la última disponible y aplica el cambio si corresponde. Si vienes de la versión uno, vas a notar modificaciones grandes; si ya estás en 2.0, solo verás mensajes de mantenimiento.
+
+Para el plugin, abre la lista de extensiones en VS Code, busca Claude y haz clic en actualizar. Lo ideal es que ambos queden en la misma versión, por ejemplo 2.0.14 [3:00].
+
+    ¿Por qué usar el plugin y el CLI al mismo tiempo? Porque ofrecen experiencias distintas. El plugin ahora renderiza una interfaz gráfica con más componentes visuales, mientras que el CLI sigue siendo útil para flujos rápidos en terminal.
+
+¿Qué son los checkpoints en Claude Code 2.0?
+
+El cambio más relevante del lanzamiento es el sistema de checkpoints. Te permite revertir cambios sin depender de Git, sin necesidad de hacer commit o add previo [3:55].
+
+Funciona así: cuando Claude Code escribe código que no esperabas, presionas Escape dos veces y se despliega el historial de instrucciones recientes. Eliges con las flechas el punto al que quieres volver y presionas Enter.
+
+Desde ahí, Claude Code te ofrece tres opciones:
+
+    Restaurar el código y la conversación.
+    Restaurar solo la conversación.
+    Restaurar solo el código.
+
+Esto te da control fino sobre qué reviertes. Si pediste un apéndice sobre cómo funciona un LLM y el resultado no te convence, puedes eliminar tanto el contenido del archivo como el contexto en la conversación con un par de teclas.
+
+¿Cómo se activa ahora el modo de pensamiento extendido?
+
+En versiones anteriores escribías think o think deeply dentro del prompt. En Claude Code 2.0 basta con presionar la tecla tabulador para alternar entre modo encendido y apagado [6:30].
+
+El modo ultra think sigue disponible y se identifica visualmente con un cambio de colores. Es la opción cuando necesitas que el modelo razone profundamente antes de implementar algo complejo.
+
+¿Qué mejoras trae Sonnet 4.5 al flujo de programación?
+
+Sonnet 4.5 es la pieza que hace posible que Claude Code ejecute tareas durante 30 horas consecutivas sin perder contexto [7:25]. La mejora no viene solo de los agentes internos, viene del modelo en sí.
+
+En el blog post de Anthropic, el equipo publicó benchmarks contra otros modelos relevantes:
+
+    Opus 4.1 y Sonnet 4 (la familia previa).
+    GPT-5 Codex y GPT-5.
+    Gemini 2.5 Pro.
+
+En una prueba controlada con una muestra de 500 ejecuciones, Sonnet 4.5 quedó sustancialmente por encima del resto. La clave está en una mejora de memoria que le permite mantener coherencia en sesiones muy largas.
+
+    ¿Cuánto tiempo puede trabajar Claude Code sin perder contexto? Hasta 30 horas consecutivas con Sonnet 4.5, gracias a mejoras de memoria del modelo y a la coordinación de sus agentes internos.
+
+¿Qué hace el comando usage en Claude Code?
+
+El comando usage muestra información de tu sesión actual: cuánto has consumido de tu límite y cuándo se resetea según tu zona horaria [8:50].
+
+Una aclaración importante: este comando solo funciona con la suscripción de Anthropic. Si tu empresa te da acceso vía tokens de la consola, no vas a ver esta información.
+
+¿Cómo buscar prompts anteriores con Control + R?
+
+Claude Code 2.0 incorpora búsqueda recursiva sobre tu historial de prompts. Presionas Control + R y aparece un buscador donde escribes una palabra clave del prompt que recuerdas [9:30].
+
+Por ejemplo, si antes pediste un ejemplo sobre qué es un LLM, escribes "un LLM" en el buscador y te aparece esa instrucción anterior. Le das Enter y el prompt se ejecuta de nuevo en la conversación actual. Si quieres detener la ejecución, presionas Escape.
+
+Todo lo que aprendiste sobre subagentes, modos de pensamiento extendido y flujos de trabajo en clases anteriores sigue siendo válido. Esta actualización los potencia, no los reemplaza. Revisa el changelog oficial en la sección de enlaces para ver el listado completo de mejoras.
+
+¿Ya probaste los checkpoints? Cuéntame en los comentarios cómo cambiaron tu forma de iterar con Claude Code.
 
 
 

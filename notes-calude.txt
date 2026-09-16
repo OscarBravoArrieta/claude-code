@@ -405,12 +405,154 @@ Todo lo que aprendiste sobre subagentes, modos de pensamiento extendido y flujos
 
 ¿Ya probaste los checkpoints? Cuéntame en los comentarios cómo cambiaron tu forma de iterar con Claude Code.
 
+9. Subagentes de frontend y backend en paralelo
+https://platzi.com/cursos/claude-code/subagentes-de-frontend-y-backend-en-para/
+
+Crear subagentes especializados en Claude Code te permite dividir tareas complejas entre expertos virtuales que trabajan en paralelo. Aquí aprendes a configurar un subagente de frontend y otro de backend, e invocarlos simultáneamente para planear la implementación de un sistema de ratings sobre una base de código existente.
+
+¿Dónde se configuran los subagentes en Claude Code?
+
+Los agentes viven dentro de la carpeta .claude/agents del proyecto. Cada uno se define en un archivo Markdown que describe su rol, su stack y sus responsabilidades.
+
+En este flujo ya existe el subagente architect, que en clases anteriores produjo el documento 00-sistema-ratings-cursos. Ese análisis de arquitectura sirve como insumo para los nuevos subagentes [00:30].
+
+¿Cómo defines el prompt de un subagente especializado?
+
+La lógica es ir de lo más general a lo más específico. Cada archivo describe:
+
+    El rol del especialista y su área de dominio.
+    El stack técnico del proyecto, por ejemplo Next, React y TypeScript para frontend, o FastAPI, Python y SQLAlchemy para backend.
+    Las responsabilidades concretas dentro de la ejecución.
+    El contexto operativo en el que se moverá.
+
+Con esa estructura, basta crear frontend.md y backend.md dentro de la carpeta de agentes para tenerlos disponibles [01:30].
+
+    ¿Qué es un subagente en Claude Code? Es un agente personalizado con un prompt propio y un contexto aislado, pensado para encargarse de un dominio específico dentro de un proyecto.
+
+¿Cómo invocas subagentes de forma explícita o implícita?
+
+Claude Code admite dos formas de invocación y conviene conocer ambas para decidir cuándo usar cada una.
+
+    Explícita: escribes @agent y eliges de la lista (frontend, backend, architect).
+    Implícita: describes la tarea en el prompt y dejas que Claude decida a qué subagentes llamar.
+
+La forma implícita es la que habilita la ejecución en paralelo. En el prompt le pides que analice el documento del architect y que use los subagentes de frontend y backend para crear planes específicos, sin generar código todavía [03:00].
+
+¿Cómo se ejecutan dos subagentes en paralelo?
+
+Claude Code recibe la instrucción y lanza ambos subagentes a la vez. Internamente redacta un prompt derivado para cada uno y los pone a trabajar sobre su dominio.
+
+Mientras corren, puedes usar Control + T para abrir la lista de to do que Claude mantiene viva. Cada tarea se tacha conforme se completa, y puedes ocultar la vista sin detener la ejecución.
+
+    ¿Cuántos subagentes pueden correr en paralelo? No hay un límite fijo a dos. Puedes orquestar varios al mismo tiempo, siempre que cada uno tenga su rol bien definido.
+
+¿Qué entregan los subagentes de frontend y backend?
+
+Cada subagente devuelve un plan de implementación estructurado en fases, sin código, solo especificaciones de qué y cómo construir.
+
+El plan de frontend parte del análisis de la arquitectura actual, la estructura de componentes y los patrones de desarrollo. Luego enumera las fases: nuevas interfaces y tipos para rating, consideraciones para integrarlos y los pasos siguientes [05:00].
+
+El plan de backend identifica los patrones del código existente, mapea la estructura de directorios y propone fases que arrancan por lo más fundamental: la base de datos. Incluye los comandos para generar migraciones, la estructura de cada migración y el procedimiento de rollback mediante downgrade [06:00].
+
+Al final, Claude resume que el plan es 100% implementable de forma secuencial, con fases independientes y sin código, tal como se solicitó.
+
+¿Cómo se organizan los archivos de especificación?
+
+Los planes se guardan dentro de la carpeta spec con nombres como backend-ratings y frontend-ratings. Puedes renumerarlos para imponer un orden de ejecución, por ejemplo 01-frontend-ratings y 02-backend-ratings, y así dejar claro qué fase va primero.
+
+¿Cómo monitoreas el contexto que consumen los subagentes?
+
+Cada subagente tiene un contexto de ejecución aislado, y eso se inspecciona con el comando context dentro de Claude Code.
+
+Ese comando muestra cómo se reparte la memoria de la conversación entre los distintos componentes:
+
+    El system prompt, que en este caso ocupa 2,200 tokens.
+    Las herramientas del sistema y los MCPs, cada uno con su consumo propio.
+    Los agentes personalizados del proyecto, con el detalle de tokens por agente.
+
+A medida que ejecutas más subagentes, el conteo total de tokens de la conversación crece. Tener visibilidad sobre eso te ayuda a entender el costo real de orquestar varios especialistas [07:30].
+
+Con los dos planes listos, el siguiente paso es pasar de la planificación a la generación de código. ¿En qué orden ejecutarías tú las fases, frontend o backend primero?
+
+Prompt: 
+
+Anlaiza el @specc/00_sistema_ratings_cursos.md que es el análisis que hizo tu subagente de arquitecto, utilizando esto como referencia utiliza a los subagentes de backend y de frontend para crear un plan específico de implementación, no generes código sino que crea únicamente las fases que se harán en la implementación
+10. Migraciones de base de datos con pruebas en Claude Code
+https://platzi.com/cursos/claude-code/migraciones-de-base-de-datos-con-pruebas/
+
+@makefile tenemos comandos útiles para pober a correr este servisio en local, crea un nuevo comand que permita ajecutar las pruebas dentro del contenedor 
+
+@spec/01_backen_ratings_implementation empecemos la implementacion de la fase 1 de este plan, es necesario que los comandos que vayas a ejecutar sean dentro del contenedor de API porque es el lugar en el que está siendo ejecutado. En el archivo de @backend/makefile hay varios comandos que resultan útiles para poder construir y reiniciar la imagen de docker si es necesario
 
 
 
+Migrar una base de datos sin romper el servicio exige método, contexto y pruebas. Con Claude Code puedes orquestar migraciones en Docker, validar con unit tests y avanzar fase por fase de un plan de implementación bien definido, todo desde la terminal y con control humano sobre cada paso.
 
+¿Cómo preparar el entorno local antes de migrar?
 
+Antes de tocar la base de datos, el servicio tiene que estar corriendo. El archivo Makefile dentro de backend concentra los comandos clave para levantar el proyecto.
 
+    make build construye la imagen y descarga los paquetes necesarios.
+    make start inicia el servicio de API.
+    make logs confirma que el contenedor encendió correctamente.
+
+Una vez arriba, abres el navegador en localhost:8000 y verificas que el API responde. Ese ping inicial te ahorra horas de depuración más adelante.
+
+    ¿Qué hace el comando make build? Construye la imagen de Docker del backend descargando todas las dependencias declaradas en el proyecto, dejando el contenedor listo para iniciarse con make start.
+
+¿Cómo agregar un comando para ejecutar pruebas?
+
+El Makefile original no traía un comando para correr pruebas dentro del contenedor. En lugar de escribirlo a mano, le pasas el archivo como contexto a Claude Code y le pides que cree un comando nuevo llamado test que ejecute Pytest dentro del contenedor de API [04:18].
+
+Claude propone la edición, tú la apruebas y queda lista. Desde una nueva terminal, dentro de backend, corres make test y validas que el set de pruebas funcione.
+
+¿Cómo resolver errores de dependencias en los tests?
+
+La primera ejecución suele fallar. En esta base de código, los unit tests requerían dos paquetes que no estaban instalados: HTTPX y pytest-asyncio.
+
+La solución fue añadirlos a las dependencias opcionales del proyecto y reconstruir con UV, el gestor de paquetes que usa este backend. Después de eso, los tests corrieron al 100%.
+
+    ¿Qué es pytest-asyncio? Es un plugin de Pytest que permite ejecutar pruebas sobre funciones asíncronas de Python, indispensable cuando tu API usa async/await.
+
+Este tipo de retos son perfectos para resolver con Claude Code: le das el error como contexto y te sugiere dónde ajustar el archivo de dependencias.
+
+¿Cómo ejecutar la fase de migración con Claude Code?
+
+El plan de implementación define fases con checklists claros. La fase uno es base de datos, y el flujo correcto es activar el plan mode antes de ejecutar nada [09:42].
+
+¿Qué modos de ejecución ofrece Claude Code?
+
+Claude Code tiene tres modos que cambias con Shift+Tab, cada uno con un nivel distinto de autonomía.
+
+    Auto accept: acepta cualquier edición sin preguntar.
+    Plan mode: planifica todo el flujo antes de tocar archivos, ideal para tareas críticas.
+    Modo por defecto: pide confirmación antes de cada acción.
+
+En una migración, el plan mode te deja revisar la estrategia completa antes de que Claude escriba una sola línea. Verás el contenedor que va a usar, la última migración aplicada y el patrón identificado.
+
+¿Cómo darle el contexto correcto al agente?
+
+Claude Code necesita ubicación y archivos específicos. Si mencionas un archivo que no encuentra, el problema casi siempre es el directorio actual.
+
+Puedes activar el bash mode con el signo de exclamación para ejecutar comandos como pwd y orientarte. Cuando Claude no logra cambiar de carpeta por restricciones, lo más rápido es salir, navegar manualmente y reiniciar la sesión.
+
+Una vez ubicado, le pasas el plan con @01-backend.md y le indicas que use los comandos del Makefile para reconstruir la imagen si hace falta. El agente entonces revisa contenedores activos, consulta el estado de Alembic, identifica la última migración y propone el plan completo.
+
+¿Cómo validar que la migración no rompió el servicio?
+
+Claude Code crea el archivo de migración, ejecuta los constraints, los índices y aplica todo en Postgres. El cierre de la fase llega cuando vuelves a correr los unit tests y todo sigue verde.
+
+El agente además propone una verificación adicional con el endpoint de health y llamadas vía cURL a los endpoints principales. Esto convierte la validación en una mini prueba de integración:
+
+    Tests unitarios pasando dentro del contenedor.
+    Estado del contenedor activo.
+    Endpoints respondiendo con la estructura esperada.
+
+Para mantener el plan de implementación sincronizado, conectas Claude Code con el editor, seleccionas el bloque del checklist y con Command+Option+K lo mencionas como contexto. Le pides marcar como finalizadas las tareas completadas y el agente actualiza los checks automáticamente.
+
+¿Por qué importa cerrar cada fase con tests?
+
+Una migración silenciosa puede romper consultas, modelos o relaciones sin previo aviso. Volver a ejecutar los unit tests después de cada cambio te garantiza que el contrato del API sigue intacto antes de pasar a la siguiente fase, como la creación de los modelos de SQLAlchemy.
 
 
 

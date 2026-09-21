@@ -555,9 +555,90 @@ Para mantener el plan de implementación sincronizado, conectas Claude Code con 
 Una migración silenciosa puede romper consultas, modelos o relaciones sin previo aviso. Volver a ejecutar los unit tests después de cada cambio te garantiza que el contrato del API sigue intacto antes de pasar a la siguiente fase, como la creación de los modelos de SQLAlchemy.
 
 
+11. Revisión de seguridad automática con Claude Code
+https://platzi.com/cursos/claude-code/revision-de-seguridad-automatica-con-cla/
 
+Prompt:
 
+claude --dangerously-skip-permissions
+Implementa secuencialemten de la fase 3 a la fase 5. Cuando termines de implementar cada fase, márcala como completataen el checkList
+Cualquier comando que necesites ejecutar en el Backend, dene ser dentro del contenedor de docker api, antes de ejecutarlo 
+certifica que esté funcionando el contenedor y revisa el archivo makefila con los comandos qiue existen y úsalos. Los comandos de test debes 
+ejecutarlos dentro del contenedor de docker.
 
+Implementar un feature completo de backend, desde la capa de servicios hasta los endpoints y las pruebas unitarias, puede automatizarse con Claude Code versión 2 y Sonnet 4.5. Aquí vas a ver cómo ejecutar sesiones largas, evitar interrupciones por permisos y validar la seguridad del código generado, todo aplicado al feature de ratings de Platzi Flix.
+
+Cómo ejecutar Claude Code sin pedir permisos en cada comando
+
+Cuando trabajas en sesiones extensas, aprobar cada comando manualmente rompe el flujo. Para evitarlo, puedes usar el flag dangerouslySkipPermissions al iniciar Claude Code.
+
+Al activarlo, Claude muestra una advertencia: ejecutará cualquier instrucción que considere conveniente. Por eso solo deberías usarlo en entornos controlados, como máquinas virtuales o contenedores de Docker con acceso restringido a internet y capacidad de restaurarse si algo se rompe.
+
+En el caso de Platzi Flix, el servicio corre dentro de un contenedor Docker que se puede recrear con comandos para regenerar la base de datos, las semillas y los tests. Ese aislamiento es lo que hace seguro el bypass [02:10].
+
+    ¿Cuándo conviene usar dangerouslySkipPermissions? Solo en entornos efímeros como contenedores Docker o máquinas virtuales que puedas restaurar. Nunca en tu máquina personal ni en producción.
+
+Cómo guardar instrucciones permanentes con el comando hash
+
+Un detalle que suele olvidarse al delegar tareas a Claude es indicarle dónde ejecutar los comandos. En este proyecto, los tests y las migraciones deben correr dentro del contenedor de Docker, no en el entorno local.
+
+Para que Claude no lo olvide en futuras interacciones, existe el comando # (hash). Este guarda una instrucción en memoria, ya sea a nivel de usuario o de proyecto.
+
+La instrucción registrada fue clara: cualquier comando del archivo Makefile relacionado con el backend debe ejecutarse dentro del contenedor de Docker API, verificando primero que esté corriendo y revisando los comandos disponibles antes de usarlos [04:30].
+
+Por qué guardar la memoria en el proyecto y no en el usuario
+
+Guardarla en la memoria del proyecto significa que cualquier persona del equipo que clone el repositorio y use Claude Code va a heredar esa misma instrucción. Es la diferencia entre una preferencia personal y una convención de equipo.
+
+Qué fases del plan se implementaron y cómo se validaron
+
+El prompt enviado a Claude fue intencionalmente corto: implementar de la fase 3 a la fase 5 del plan de ratings de forma secuencial y marcar cada fase como completada en el checklist. La razón de esa brevedad es que el plan de implementación ya contenía toda la especificación detallada.
+
+El resultado cubrió tres bloques:
+
+    Service layer con siete métodos documentados según los requisitos previos.
+    Endpoints construidos con un directorio schemas y modelos de Pydantic, siguiendo el patrón del repositorio.
+    Testing con 39 pruebas pasando y una marcada como skip.
+
+Cómo medir el consumo de contexto con el comando context
+
+El comando /context muestra cuánto del límite de tokens estás usando. En esta sesión, Sonnet 4.5 trabaja con una ventana de 200 000 tokens y la implementación consumió cerca del 66 %.
+
+Claude usó dos MCP relacionados con el editor de código y muy pocos custom agents, lo que indica que la mayor parte del trabajo se hizo con herramientas nativas.
+
+Cómo revisar la seguridad del código generado con Security Review
+
+Cuando das libertad total a una IA con bypass de permisos, necesitas un mecanismo para auditar lo que produjo. Claude Code incluye un comando predefinido llamado /security-review que analiza los cambios de la rama actual buscando vulnerabilidades.
+
+El análisis identificó un hallazgo crítico: era posible hacer bypass de autorización en las operaciones de rating. Lo catalogó bajo el estándar OWASP como control de accesos roto con un 95 % de confianza.
+
+    ¿Qué es OWASP Broken Access Control? Es una de las vulnerabilidades más comunes según OWASP. Ocurre cuando un usuario puede ejecutar acciones o ver datos que no le corresponden por falta de validaciones de permisos.
+
+Qué hacer cuando te quedas sin contexto en Claude Code
+
+Después del análisis de seguridad, el contexto disponible bajó al 9 %, es decir, ya se había consumido el 91 %. Claude Code avisa automáticamente y sugiere usar el comando /compact.
+
+Tienes dos formas de usarlo:
+
+    Compact solo: Claude decide qué conservar y qué resumir.
+    Compact con instrucción: tú indicas qué partes conservar, por ejemplo, los hallazgos del análisis de seguridad.
+
+Si prefieres empezar de cero, el comando /reset limpia la conversación por completo y la deja como nueva.
+
+Cómo persistir hallazgos importantes en archivos Markdown
+
+En lugar de depender solo del contexto en memoria, puedes pedirle a Claude que documente los hallazgos en un archivo Markdown dentro de la carpeta Spec, siguiendo la numeración del proyecto (por ejemplo, 03).
+
+Ese archivo queda disponible para futuras sesiones e incluye:
+
+    Resumen ejecutivo de la auditoría.
+    Lista de vulnerabilidades encontradas.
+    Clasificación según estándares como OWASP.
+    Nivel de confianza de cada hallazgo.
+
+Así, aunque la conversación se reinicie, el conocimiento queda anclado al repositorio y puede usarse como entrada para corregir el código en una nueva sesión.
+
+Con esto ya tienes el feature de ratings de Platzi Flix funcionando: migración, modelos, API, pruebas y un reporte de seguridad. Ahora te toca a ti usar Claude Code junto con ese reporte para corregir la vulnerabilidad detectada. Cuéntame en los comentarios cómo lo resolviste.
 
 
 

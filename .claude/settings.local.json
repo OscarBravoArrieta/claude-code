@@ -4,7 +4,28 @@
       "PowerShell(Write-Output \"=== Proceso Docker Desktop ===\"; $p = Get-Process 'Docker Desktop' -ErrorAction SilentlyContinue; if \\($p\\) { Write-Output \"corriendo \\(PID $\\($p.Id\\)\\)\" } else { Write-Output \"NO esta corriendo\" }; Write-Output \"=== Servicio com.docker.service ===\"; $s = Get-Service 'com.docker.service' -ErrorAction SilentlyContinue; if \\($s\\) { Write-Output \"$\\($s.Status\\) / inicio: $\\($s.StartType\\)\" } else { Write-Output \"servicio no encontrado\" }; Write-Output \"=== WSL ===\"; wsl --status; Write-Output \"=== Distros WSL ===\"; wsl --list --verbose)",
       "PowerShell(foreach \\($c in @\\('make','docker-compose'\\)\\) { $g = Get-Command $c -ErrorAction SilentlyContinue; if \\($g\\) { Write-Output \"$c = $\\($g.Source\\)\" } else { Write-Output \"$c = NO ENCONTRADO\" } }; Write-Output \"=== docker compose v2 \\(plugin\\) ===\"; docker compose version 2>$null; if \\(-not $?\\) { Write-Output \"no disponible sin daemon o no instalado\" })",
       "Bash(docker-compose exec *)",
-      "Bash(docker-compose ps *)"
+      "Bash(docker-compose ps *)",
+      "PowerShell(Get-Command yarn -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command node -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command npm -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command corepack -ErrorAction SilentlyContinue)",
+      "PowerShell(corepack --version 2>&1)",
+      "PowerShell(corepack enable 2>&1)",
+      "Bash(curl -s -o /tmp/courses.json -w \"HTTP %{http_code}\\\\n\" http://localhost:8000/courses)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/home.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000)",
+      "Bash(grep -o \"starRating[A-Za-z_-]*\" /tmp/home.html | sort -u; echo \"---aria-label---\"; grep -o \"Rating: [0-9.]* out of 5 stars[^\\\\\"]*\" /tmp/home.html | sort -u; echo \"---count occurrences of course cards---\"; grep -o \"courseCard[A-Za-z_-]*\" /tmp/home.html | sort | uniq -c)",
+      "Bash(npx vitest *)",
+      "Bash(curl -s http://localhost:8000/courses)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(c['name'], '->', c['thumbnail']\\) for c in d]\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP_STATUS:%{http_code}\\\\n\" --max-time 8 \"https://via.placeholder.com/300x200?text=React+Course\")",
+      "Bash(curl -sI --max-time 8 \"https://via.placeholder.com/300x200?text=React+Course\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Process -Id 10864)",
+      "Bash(mkdir -p \"/c/Users/obravo/AppData/Local/Temp/claude/c--projects-ia-claude-code/6030cbda-5f16-453c-826f-887470387df3/scratchpad\")",
+      "Bash(curl -s http://localhost:8000/openapi.json -o \"/c/Users/obravo/AppData/Local/Temp/claude/c--projects-ia-claude-code/6030cbda-5f16-453c-826f-887470387df3/scratchpad/openapi.json\" -w \"HTTP_STATUS: %{http_code}\\\\n\")",
+      "Bash(node -e ' *)",
+      "Bash(make stop *)"
     ]
   }
 }

@@ -641,20 +641,446 @@ Así, aunque la conversación se reinicie, el conocimiento queda anclado al repo
 Con esto ya tienes el feature de ratings de Platzi Flix funcionando: migración, modelos, API, pruebas y un reporte de seguridad. Ahora te toca a ti usar Claude Code junto con ese reporte para corregir la vulnerabilidad detectada. Cuéntame en los comentarios cómo lo resolviste.
 
 
+12. Ratings en frontend con datos mock y Claude Code
+https://platzi.com/cursos/claude-code/ratings-en-frontend-con-datos-mock-y-cla/
 
 
-     
+yarn install
+
+Implementar un sistema de ratings en el frontend con Claude Code te permite acelerar el desarrollo de componentes UI sin perder control sobre el alcance. Aquí verás cómo levantar el servidor, exportar conversaciones entre sesiones, invocar subagentes especializados y usar capturas de pantalla como contexto visual para iterar sobre el diseño.
+
+Cómo levantar el servidor de frontend con Claude Code
+
+Antes de tocar una sola línea de código, necesitas el entorno corriendo. El archivo README.markdown dentro de la carpeta de frontend suele tener las instrucciones, pero cuando no las encuentras, Claude Code puede leer la base de código y proponer cómo ejecutarla.
+
+El flujo estándar es sencillo: instalar dependencias y luego arrancar el servicio.
+
+    Ejecuta yarn install para instalar dependencias.
+    Corre yarn dev desde la terminal de Claude Code para que tome la salida como contexto.
+    Presiona Control+B para mandar el proceso a background y liberar la conversación.
+    Usa el comando bashes para ver las tareas activas y su salida.
+
+En el ejemplo de la clase, el servicio quedó listo en 639 milisegundos en localhost:3000 [02:30]. Si abres el navegador y ves un error porque no encuentra la lista de cursos, significa que el backend no está prendido. Entra a la carpeta backend y ejecuta make start para levantar la base de datos y el API juntos.
+
+    ¿Qué hace Control+B en Claude Code? Envía un proceso largo, como un servidor de desarrollo, al background para seguir conversando con el agente sin bloquear la sesión.
+
+Cómo exportar una conversación de Claude Code a otra sesión
+
+Cuando abres Claude Code dentro de la carpeta de frontend, los subagentes definidos en la raíz del proyecto no están disponibles. Para no perder el contexto que ya construiste, usa el comando export [06:45].
+
+Este comando te ofrece dos caminos: copiar la conversación al portapapeles o guardarla en un archivo. Al elegir la opción uno, puedes pegar todo el historial en una nueva sesión abierta desde la carpeta padre.
+
+Cuando pegas un texto extenso, Claude Code lo comprime visualmente y muestra un mensaje indicando que se pegó un bloque de más de cien líneas. Internamente sí recibe el contenido completo, pero la interfaz se mantiene ordenada.
+
+La instrucción que acompaña al pegado es clave: pídele que entienda el contexto de la conversación previa antes de continuar. Así puedes invocar al subagente especialista en frontend sin reconstruir todo el plan desde cero.
+
+Cómo invocar el subagente de frontend para crear el componente de rating
+
+Con el contexto cargado, el siguiente paso es ejecutar la fase uno del plan: tipos e interfaces de ratings. La instrucción debe ser específica para evitar que el agente se desvíe.
+
+Un problema frecuente con agentes de codificación es que se van más allá del alcance solicitado. En la clase, Claude empezó a revisar archivos del backend cuando solo se le pidió la UI de la lista de cursos. La solución fue detener la ejecución y enviar un prompt correctivo.
+
+    ¿Cómo evito que Claude Code haga más de lo pedido? Sé explícito en el alcance, indica qué archivos puede tocar y aclara cuándo usar datos mock en lugar de integrarse con APIs reales.
+
+La instrucción correcta fue: crear el componente de ratings con valores mock para ciertos cursos, sin tocar la integración con el API. Tras el ajuste, el agente generó la lista de tareas pendientes nuevamente y procedió con la implementación de los componentes UI.
+
+Para aprobar ediciones más rápido durante una sesión activa, presiona la opción dos cuando aparezca el diálogo de permisos. Esto permite cualquier modificación sin confirmar archivo por archivo.
+
+Qué pasa cuando el puerto 3000 ya está en uso
+
+Si tienes un yarn dev corriendo por fuera de Claude Code y el agente intenta levantarlo de nuevo, verás un error de puerto ocupado. Detén el proceso anterior y deja que Claude reinicie el servicio dentro de su propia sesión, así mantiene el contexto de la salida del servidor.
+
+Al ejecutar bashes después de esto, verás dos instancias: una detenida y otra activa con el yarn dev actual.
+
+Cómo usar capturas de pantalla como contexto visual en Claude Code
+
+Una vez que el componente está renderizado, abrir el navegador en localhost:3000 muestra las estrellas, el contador y un efecto CSS sobre el promedio de cada curso. Pero el diseño rara vez queda perfecto en el primer intento.
+
+Aquí entra una de las funciones más útiles: pegar imágenes directamente en la conversación.
+
+    Captura pantalla con la herramienta de tu sistema operativo, en macOS queda en el portapapeles.
+    Pega la imagen en Claude Code con Control+V, no con Command+V.
+    Pide un análisis detallado activando el modo de pensamiento extendido o usando ultra think.
+
+El agente describe lo que ve: el card del curso de React con 3.5 estrellas, los estilos aplicados, el modo read-only del componente y los datos mockeados [16:20]. A partir de ese análisis puedes pedirle ajustes de CSS, comparar contra una imagen de referencia o validar que el render coincida con un diseño esperado.
+
+    ¿Para qué sirve pegar imágenes en Claude Code? Para darle contexto visual del estado actual de la UI o de un diseño de referencia, así sus iteraciones de CSS y layout se basan en lo que realmente ves en pantalla.
+
+Esta capacidad multiplica las formas de pasar contexto. No estás limitado al código: capturas de pantalla, mockups, referencias de Figma o screenshots de bugs funcionan igual.
+
+Qué falta para completar el feature de ratings
+
+La lista de cursos ya muestra el componente con datos mock. Quedan pendientes la vista de detalle del curso y la vista de clases, además de reemplazar los valores simulados por la conexión real al API construido en las clases de backend.
+
+Cuéntame en los comentarios qué retos enfrentaste al implementar el componente para el detalle del curso y cómo los resolviste con Claude Code.
+
+13 Integración full stack con add dir en Claude Code
+https://platzi.com/cursos/claude-code/integracion-full-stack-con-add-dir-en-cl/
+
+Conectar un frontend con un backend que vive en otra carpeta del proyecto suele ser un dolor de cabeza cuando el agente de IA no tiene visibilidad de ambos lados. Aquí aprendes a usar el comando add dir de Claude Code para dar contexto cruzado entre directorios y completar una integración full stack de ratings, leyendo el API real desde el navegador.
+
+¿Cómo agregar un directorio externo como contexto en Claude Code?
+
+Cuando trabajas en una carpeta de frontend, Claude Code no ve por defecto el código de backend aunque estén al mismo nivel. La solución es darle acceso explícito al directorio.
+
+El flujo es directo y se apoya en la terminal:
+
+    Entra a la carpeta de backend desde la terminal.
+    Ejecuta pwd para obtener la dirección absoluta del directorio.
+    Copia esa ruta y, dentro de Claude Code, usa el comando add dir seguido de la ruta.
+    Confirma que la carpeta quedó accesible como contexto en la conversación.
+
+    ¿Qué hace el comando add dir en Claude Code? Permite sumar una carpeta externa como contexto activo de la conversación, así el agente puede leer y modificar archivos fuera del directorio donde lo iniciaste.
+
+Esto es clave cuando tu backend y frontend viven en repos o carpetas separadas y necesitas que la IA razone sobre ambos al mismo tiempo. [01:00]
+
+¿Cómo darle contexto del API a un agente sin acceso al código?
+
+No siempre tienes el código fuente del backend disponible. Si trabajas contra un API externo, necesitas otra estrategia para que el agente entienda la estructura sin adivinarla.
+
+Leyendo el código fuente directamente
+
+Cuando sí tienes el repo, el prompt correcto es pedirle que investigue. Algo como: "averigua todo lo que necesites para hacer la integración del API de ratings en el frontend, busca los archivos dentro de la carpeta backend que tengan relevancia".
+
+Claude Code recorre el repo y devuelve un resumen útil:
+
+    El modelo de datos de ratings.
+    Los endpoints disponibles.
+    El esquema de respuesta que retorna cada endpoint.
+
+Usando Swagger y openapi.json como fuente de verdad
+
+Si no hay acceso al código, la documentación del API resuelve el problema. En el proyecto, el backend corre en localhost:8000 y expone su documentación en la ruta /docs usando Swagger. Dentro de esa página existe un enlace a openapi.json, un archivo de texto con la definición completa de todos los endpoints.
+
+    ¿Qué es openapi.json y por qué sirve como contexto? Es la especificación en formato JSON de todos los endpoints, parámetros y respuestas de un API. Como es texto plano, puedes pasárselo a un agente de IA para que entienda la estructura sin tocar el código.
+
+En vez de copiar y pegar, el atajo elegante es pedirle al agente: "haz un curl a esta dirección y extrae todo el contexto que puedas del openapi.json". El agente descarga el archivo, lo interpreta y lo usa como referencia. [03:30]
+
+¿Cómo ejecutar una integración full stack end to end?
+
+Con contexto del código y del API, llega el momento de pedir la implementación concreta. La clave está en ser específico sobre dónde y qué quieres modificar.
+
+El prompt usado fue: "utilizando el contexto, haz la integración del API para que traiga el rating del curso", aclarando que era en la página de lista de cursos y reemplazando el mock anterior por datos reales.
+
+Aquí pasó algo interesante. Claude Code detectó que el endpoint que devuelve la lista de cursos no incluía el campo rating en su respuesta. Para terminar la integración del frontend, había que tocar también el backend. Y como add dir ya había habilitado el acceso a esa carpeta, el agente pudo planear cambios en ambos lados.
+
+El plan de ejecución se aprobó con un simple "ejecuta la lista de to-dos" y al refrescar el navegador aparecieron los datos reales:
+
+    Curso de React: rating promedio de 4.5 con 4 valoraciones.
+    Curso de Python: con 2 valoraciones registradas.
+
+    ¿Cuándo conviene modificar backend y frontend en la misma sesión? Cuando una integración revela que falta un campo, un endpoint o un dato en el backend. Tener ambos directorios como contexto evita ir y venir entre conversaciones.
+
+Este flujo bidireccional es lo que vuelve poderoso a Claude Code para desarrollo full stack: corriges el frontend cuando el backend lo exige, y ajustas el backend cuando el frontend descubre un faltante.
+
+Reto: completa la funcionalidad de ratings
+
+La integración quedó lista para mostrar ratings en la lista, pero falta la otra mitad de la experiencia. El reto consiste en:
+
+    Permitir que un estudiante guarde su valoración del curso.
+    Mostrar en el detalle del curso el rating individual de ese estudiante.
+
+14 Playwright, Notion y Linear como MCPs en Claude Code
+https://platzi.com/cursos/claude-code/playwright-notion-y-linear-como-mcps-en/
+
+Trabajar con un agente de codificación como Claude Code rinde mucho más cuando le das contexto adecuado. Los servidores MCP (Model Context Protocol) son el estándar creado por Anthropic para extender las capacidades de un modelo de lenguaje y conectarlo con herramientas reales como navegadores, documentación o gestores de tareas.
+
+En la práctica, esto significa que tu flujo como desarrollador deja de ser solo escribir código y se convierte en orquestar contexto: leer un brief en Notion, validar el resultado en el navegador con Playwright y crear tickets en Linear, todo desde la misma conversación.
+
+    ¿Qué es un servidor MCP? Es un componente que provee al modelo de tools, resources y prompts para que pueda ejecutar acciones más allá de su entrenamiento, como abrir un navegador o leer un documento.
+
+Cómo se gestionan los servidores MCP en Claude Code
+
+La gestión se hace desde la línea de comandos con claude mcp. Si ejecutas claude mcp --help verás las opciones disponibles para agregar, listar, remover y servir servidores [1:00].
+
+Existen dos rutas para sumar un MCP a Claude Code:
+
+    Importarlos desde la aplicación de escritorio de Claude si ya los tienes configurados ahí.
+    Instalarlos directamente con el comando add, indicando el tipo de transporte.
+
+Los servidores MCP funcionan con tres tipos de transporte: HTTP, Server-Sent Events (SSE) y el estándar Input/Output (stdio). Cada servidor define cuál usa, y tú solo copias el comando que ofrece su documentación [2:05].
+
+Cómo verifico que un MCP quedó instalado
+
+Después de agregarlo, ejecuta claude mcp list. Ese comando hace un checking del estatus de cada servidor y te dice si está conectado o si necesita autenticación.
+
+Dentro de la conversación con Claude también puedes escribir /mcp para ver la lista activa, reautenticar sesiones o limpiar credenciales.
+
+Cómo usar el MCP de Playwright para automatizar el navegador
+
+El primer servidor recomendado es Playwright, que le da al modelo la capacidad de abrir un navegador y navegar sitios web reales [3:30]. Es ideal para validar lo que estás construyendo en localhost.
+
+Para instalarlo, copia el comando que aparece en la sección de Claude Code de la documentación de Playwright y pégalo en tu terminal. Una vez conectado, puedes pedirle cosas como: "Utilizando el MCP de Playwright, visita este sitio".
+
+La primera vez que ejecuta una acción, Claude te pedirá permiso para usar la tool correspondiente (por ejemplo, navegar a una URL o tomar un screenshot). Puedes autorizarlo solo para esa sesión.
+
+Qué puede hacer el modelo con Playwright
+
+Las capacidades cubren un flujo completo de QA visual:
+
+    Navegar a URLs específicas y esperar a que cargue el contenido.
+    Hacer scroll y validar que el comportamiento sea correcto.
+    Tomar capturas de pantalla y usarlas como contexto visual.
+    Grabar videos del flujo de navegación.
+    Leer la consola del navegador y detectar errores, como imágenes que no cargan [5:10].
+
+Esto convierte a Playwright en una herramienta de testing funcional asistida por IA, donde el modelo describe lo que ve y propone mejoras sin que tú coordines el navegador.
+
+Cómo conectar Notion y Linear como fuentes de contexto
+
+Los otros dos servidores que completan el flujo profesional son Notion y Linear. Ambos requieren autenticación, a diferencia de Playwright.
+
+    ¿Para qué sirve el MCP de Notion? Permite que Claude Code lea documentación del equipo (briefs de producto, specs de diseño) y la use como contexto antes de escribir código.
+
+Cómo instalo el MCP de Notion
+
+En la documentación de Claude Code hay una lista oficial de servidores MCP con sus comandos. Para Notion, el transporte es HTTP [7:45]. Pega el comando en la terminal y, al ejecutar /mcp dentro de Claude, aparecerá la opción de autenticar.
+
+Al hacer clic, se abre una ventana del navegador donde eliges el workspace de Notion al que quieres dar acceso. Confirmas la URL que monta Claude Code y autorizas la conexión.
+
+Una vez autenticado, puedes pasarle el link de un documento compartido y pedirle: "Utiliza el MCP de Notion para traer la documentación de este link". El modelo devolverá un objeto JSON con el título y el contenido, listo para usarse como referencia [9:30].
+
+Cómo instalo el MCP de Linear
+
+Linear es la herramienta de gestión de tareas, y su servidor MCP usa transporte Server-Sent Events (SSE). Esto demuestra que Claude Code soporta los tres transportes sin diferencias en la experiencia [10:50].
+
+El proceso es similar: copias el comando desde la documentación de Linear, lo pegas en la terminal y luego autenticas desde dentro de la conversación. Con eso habilitado, puedes pedir: "Revisa usando el MCP de Linear cuáles son las tareas que tengo asignadas".
+
+    ¿Qué ventaja da combinar Notion, Playwright y Linear? Te permite leer el brief, validar la implementación visual y crear o actualizar tickets sin salir de Claude Code. Es un ciclo cerrado de contexto, ejecución y seguimiento.
+
+Cómo se ve un flujo de trabajo profesional con MCP
+
+El escenario ideal funciona así: tomas la documentación de Notion, la traes como contexto a Claude Code, generas un plan de implementación con user agents, validas el resultado en el navegador con Playwright y creas los tickets en Linear para gestionar la entrega [12:40].
+
+Los MCP fueron diseñados precisamente para esto: ampliar las capacidades del modelo más allá del código y cubrir el análisis previo, la validación posterior y la coordinación con el equipo.
+
+¿Qué servidores MCP conoces tú y en qué casos te han funcionado? Déjalo en los comentarios.
 
 
+15 Control de costos y modelos en Claude Code.
+https://platzi.com/cursos/claude-code/control-de-costos-y-modelos-en-claude-co/
+¿Sabes cuánto cuesta realmente generar código con inteligencia artificial? Aprender a hacer el manejo de costos en Claude Code te permite entender el consumo de tokens, comparar modelos y elegir el más rentable según la tarea, algo clave si trabajas con la API de Anthropic.
+
+Y aquí viene lo interesante: un curso completo puede generarse con 19 millones de tokens y costar menos de 16 dólares. La clave está en saber leer los datos.
+
+¿Cómo veo el costo de una sesión activa en Claude Code?
+
+Dentro de la terminal, mientras estás en una conversación con Claude, puedes consultar el costo exacto de esa sesión en curso. La CLI te muestra el monto en dólares, el tiempo que ha tomado la API, cuánto has esperado y la cantidad de tokens de input procesados.
+
+Esto sirve para sesiones largas, pero tiene un límite: no puedes ver el histórico de conversaciones anteriores desde ahí. Para eso necesitas otra herramienta.
+
+¿Cómo veo el costo de mi sesión actual en Claude Code? Dentro de la conversación activa, la CLI muestra el costo en dólares, los tokens de input y el tiempo de uso de la API. Solo aplica a la sesión en curso, no a las anteriores.
+
+¿Qué es CC Usage y cómo se usa para auditar tokens?
+
+Cuando trabajas en múltiples repositorios y conversaciones, necesitas una vista global. Ahí entra CC Usage, una herramienta que se ejecuta con npx y te entrega un reporte tabulado del consumo en un rango de fechas.
+
+La tabla te muestra varios datos por día y por modelo:
+
+Tokens de input y output.
+Caché creado y caché leído.
+Total de tokens consumidos.
+Costo en dólares.
+
+En el ejemplo del curso, se usaron dos modelos (Sonnet 4.5 y Haiku 4.5) durante dos días, con un consumo de 19.453.000 tokens por solo $15,99 dólares. ¿Cómo es posible ese precio?
+
+¿Por qué Claude Code resulta tan barato pese al volumen de tokens?
+
+La respuesta está en el caché. Claude Code guarda en caché parte del contexto cuando ejecuta tareas. La primera vez que se almacena un token, te cobra el monto completo, pero cada lectura posterior desde el caché cuesta una fracción mínima del precio original.
+
+Por eso puedes mover millones de tokens sin que la factura se dispare. El sistema está diseñado para reutilizar contexto y abaratar las iteraciones largas.
+
+¿Cuánto cuesta cada modelo de Claude y cuál debo elegir?
+
+Dentro de Claude Code, el comando /model te lista los modelos disponibles con su precio por millón de tokens. La unidad estándar siempre es un millón de tokens, dividido entre input (lo que envías) y output (lo que el modelo genera).
+
+Estos son los precios y casos de uso:
+
+Sonnet 4.5: $3 input / $15 output. Es el recomendado por defecto. Equilibra capacidad, velocidad y costo.
+Opus: $15 input / $75 output. El más caro, pensado para tareas de razonamiento profundo y problemas complejos.
+Sonnet con 1M de contexto: $6 input / $22,50 output. Útil cuando necesitas ventanas de contexto enormes.
+Haiku: $1 input / $5 output. Modelo pequeño y rápido para tareas simples y análisis ligeros.
+
+La lógica es sencilla: si tu tarea exige razonamiento avanzado, Opus rinde mejor aunque cueste más. Si necesitas algo veloz y barato, Haiku basta. Para el día a día, Sonnet 4.5 cubre la mayoría de los casos sin gastos excesivos.
+
+¿Cuál es el modelo más rentable de Claude Code? Sonnet 4.5, con $3 por millón de tokens de input y $15 por millón de output. Ofrece capacidad para tareas complejas a un costo mucho menor que Opus.
+
+¿Cómo afecta tu plan de autenticación al control de costos?
+
+Claude Code te deja autenticarte de dos maneras y cada una cambia tu relación con el precio.
+
+La suscripción a Claude no cobra por millón de tokens. Te asigna una cantidad predeterminada de uso con un límite diario. Si trabajas aquí, no debes preocuparte tanto por el dinero, sino por no chocar con el tope diario.
+
+La consola de Anthropic, en cambio, sí cobra por millón de tokens y no impone un límite de uso. Aquí el control de costos sí importa, porque cada token cuenta directamente en tu factura.
+
+¿Cuándo conviene cada método de autenticación?
+
+Elige según tu patrón de uso:
+
+Si haces uso intensivo y constante, la suscripción te da previsibilidad mensual.
+Si tu uso es variable o profesional con clientes distintos, la consola te da flexibilidad sin topes.
+Si combinas modelos como Opus y Haiku según la tarea, la consola te permite optimizar gasto por proyecto.
+
+Con el comando de costos dentro de Claude Code y la herramienta CC Usage tienes un panorama completo: sabes cuánto gastas hoy, cuánto consumiste ayer y qué modelo te conviene mañana.
+
+Déjame en los comentarios cuántos tokens has gastado tú haciendo las prácticas.
+
+16. Instala Claude Code en GitHub Actions
+https://platzi.com/cursos/claude-code/instala-claude-code-en-github-actions/
+
+Integrar Claude Code en un repositorio de GitHub te permite invocar al asistente directamente desde pull requests, issues y revisiones de código, usando el mismo contexto que tendrías en la terminal. La instalación se hace mediante GitHub Actions y, si eres administrador del repo, puedes dejarlo listo en pocos minutos.
+
+¿Qué hace Claude Code dentro de un repositorio de GitHub?
+
+Claude Code se instala como un workflow de GitHub Actions. Eso significa que puedes mencionarlo dentro de un pull request o un issue y darle instrucciones como si estuvieras en la terminal, pero usando la interfaz de GitHub. El código del repositorio funciona como contexto para sus respuestas.
+
+El equipo de Anthropic habilitó dos formas de invocarlo [02:30]:
+
+Con el handle de Claude, mencionándolo en comentarios.
+Con un review automático cuando se abre o asigna un pull request.
+
+¿Para qué sirve Claude Code en GitHub? Te permite pedirle revisiones de código, responder issues o sugerir cambios en pull requests sin salir de la plataforma, usando el repositorio como contexto.
+
+¿Cuáles son las dos formas de instalar Claude Code en GitHub?
+
+Existen dos rutas según los permisos que tengas sobre el repositorio. Cada una llega al mismo resultado, pero con diferente nivel de automatización.
+
+Método rápido con el comando de Claude Code
+
+Es el recomendado y se ejecuta desde la terminal con un comando de instalación. Para usarlo necesitas cumplir tres condiciones [01:10]:
+
+Ser administrador del repositorio.
+Poder agregar secrets a la aplicación de GitHub.
+Habilitar permisos de lectura y escritura sobre contenido, issues y pull requests.
+
+También es requisito tener instalado el GitHub CLI en tu sistema. Si no lo tienes, en la sección de enlaces y recursos encuentras la guía oficial.
+
+Método manual como alternativa
+
+Si no eres admin o el comando rápido falla, puedes instalar los workflows de forma manual. El código que se agrega es exactamente el mismo que genera el método rápido y está publicado por Anthropic en la documentación de configuración manual.
+
+¿Cómo ejecutar la instalación rápida paso a paso?
+
+Con el GitHub CLI listo, abre Claude en tu terminal y ejecuta el comando de instalación de la aplicación de GitHub [02:00]. El asistente revisa el repositorio actual y te pregunta si es ese el que quieres usar. Si no, puedes elegir otro.
+
+Al confirmar, se abre el navegador para configurar la aplicación de Claude dentro de GitHub. Allí haces lo siguiente:
+
+Pulsa Configurar y elige la organización donde vive el repo.
+Selecciona únicamente el repositorio donde quieres instalar Claude.
+Habilita permisos de actions y de lectura y escritura para código, discusiones, issues y pull requests.
+Autoriza la instalación e inicia sesión en la consola de Anthropic con Google o el método que uses.
+
+Cuando regreses a GitHub, verás que la aplicación ya aparece instalada en el repositorio. Vuelve a la terminal y presiona enter para continuar.
+
+¿Qué permisos necesita Claude Code en GitHub? Lectura y escritura sobre contenido, issues y pull requests, además de acceso a actions. Sin estos permisos, la instalación rápida no funciona.
+
+¿Qué configura Claude Code automáticamente en tu repositorio?
+
+Después de presionar enter, Claude te pregunta cómo quieres invocarlo: con el handle de Claude o mediante review automático. Al elegir, arranca un to-do de acciones que termina creando un pull request sobre la rama master [04:10].
+
+Ese pull request agrega dos workflows de GitHub Actions:
+
+Uno para hacer review de código de forma automática.
+Otro para invocar a Claude cuando se comenta un pull request, se crea o asigna un issue, o se solicita un review.
+
+Como administrador, puedes hacer merge directo a master. Tras el merge, en la carpeta de workflows del repo aparecen los archivos de Claude y Claude Code Review.
+
+¿Dónde queda guardada la API key de Anthropic?
+
+Un detalle clave: el comando guarda automáticamente el secret con la API key de Anthropic dentro del repositorio. Lo puedes verificar en Settings > Secrets > Actions, donde aparece el secreto listo para que los workflows lo consuman [05:30].
+
+Con eso queda todo conectado: la aplicación instalada, los workflows en el código y la API key protegida como secret. Si tuviste problemas con la instalación rápida o resolviste algo creativo en el camino, cuéntamelo en los comentarios.
 
 
+17. Cómo invocar Claude Code desde un pull request
+https://platzi.com/cursos/claude-code/como-invocar-claude-code-desde-un-pull-r/
+
+Integrar Claude Code dentro de un repositorio de GitHub te permite ejecutar revisiones de código y tareas automatizadas sin abrir el editor. Aquí aprendes a invocarlo desde un pull request, leer sus comentarios y aprovechar su análisis sobre tu base de código real.
+
+¿Cómo crear un pull request para invocar a Claude Code?
+
+Para probar la integración necesitas un pull request abierto, y no tiene que ser complejo. Una modificación pequeña en el README basta para activar el flujo.
+
+El proceso parte de crear una rama nueva con git checkout -b feat/cloud-code-usage. Sobre esa rama haces el cambio puntual, en este caso una línea agregada al archivo README del backend.
+
+¿Qué pasos sigues en la terminal?
+
+La secuencia es directa y replica el flujo estándar de Git:
+
+git checkout -b feat/cloud-code-usage para crear la rama.
+git add backend/README.md para preparar solo el archivo que te interesa.
+git commit -m "A simple modification to README file" con un mensaje claro.
+git push para subir la rama al remoto.
+
+Una vez en GitHub, la interfaz te ofrece crear el pull request sobre el mismo repositorio con la descripción del cambio.
+
+¿Por qué se necesita un pull request para usar Claude Code en GitHub? Porque la configuración inicial le da permisos de lectura y escritura sobre pull requests. Sin uno abierto, no hay contexto donde mencionarlo ni dejar comentarios.
+
+¿Qué hace Claude Code automáticamente al abrir un PR?
+
+Apenas creas el pull request, se dispara un job de GitHub Actions definido en el archivo de workflow. Ese job ejecuta una revisión automática del código que enviaste.
+
+El análisis revisa code smells, posibles fallas de seguridad y prácticas de calidad. Es equivalente a tener un code review automatizado en cada cambio que subes a la rama.
+
+Al finalizar, Claude deja un resumen como comentario dentro del mismo pull request, listando hallazgos y mejoras sugeridas. Una lucecita en el PR indica que la revisión está en curso.
+
+¿Cómo mencionar a Claude dentro de un pull request?
+
+La invocación manual ocurre en la sección de comentarios del PR. Escribes @claude seguido de la instrucción que necesitas, por ejemplo: "Explícame los cambios que están en esta rama".
+
+Cuando Claude confirma la lectura del comentario, agrega una reacción de ojos al mensaje. Después publica un nuevo comentario con el enlace al job que está ejecutando tu solicitud.
+
+¿Cómo se ven las tareas que ejecuta Claude?
+
+El flujo dentro de GitHub replica lo que verías en la terminal:
+
+Claude lista las tareas que determinó hacer según tu prompt.
+Marca cada tarea como completada conforme avanza.
+Analiza tanto el código del PR como la base de código completa del repositorio.
+Publica un resumen final con los archivos modificados y los cambios específicos.
+
+En el ejemplo, identifica que el archivo modificado es el README del backend y describe las dos líneas agregadas con precisión.
+
+¿Cómo describir bien una tarea para Claude en un PR? Si envías código real a producción, sé explícito sobre qué quieres que evalúe: seguridad, lógica, rendimiento o estilo. Un prompt claro evita análisis genéricos.
+
+¿Cómo traer los comentarios del PR a la terminal con pr comments?
+
+Los comentarios del pull request, vengan de Claude o de un peer, son utilizables desde la terminal. Esto cierra el ciclo entre revisión remota y trabajo local.
+
+Abres Claude Code en tu terminal y escribes el comando pr comments. Internamente usa el CLI de GitHub, el mismo que se utilizó al instalar la aplicación de Claude Code en el repositorio.
+
+El comando recupera todos los comentarios del pull request actual y te los muestra organizados. En el ejemplo aparecen dos: el del code review automático con problemas de calidad, y el de la descripción de cambios solicitada manualmente.
+
+¿Para qué sirve traer los comentarios al editor?
+
+Este flujo resuelve un escenario muy común en equipos:
+
+Un compañero deja observaciones en tu pull request.
+Ejecutas pr comments desde tu terminal local.
+Claude Code lee los comentarios y los resuelve directamente sobre el código.
+Subes los cambios sin alternar entre la web y el editor.
+
+Con Claude Code instalado en el repositorio habilitas acceso a la base de código sin depender de un editor de texto, y conviertes los comentarios del PR en tareas accionables desde la línea de comandos.
+
+Te reto a involucrar a Claude Code en la creación de un nuevo feature usando solamente la interacción a través del pull request de GitHub. Cuéntame en los comentarios qué hiciste y cómo lo resolviste.
+
+Ejecutar backend
+cd Backend
+make start
+http://localhost:8000
+http://localhost:8000/docs
+
+cd Backend
+make stop
 
 
+Ejecutar frontend
+cd Frontend
+yarn dev
+http://localhost:3000/
 
-
-
-
-
+cd frontend
+CTRL + C
 
 
 
